@@ -1,0 +1,169 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
+# ============================================================
+# Program Name : form_validator.py
+# Scenario     : A hospital registration form validator that
+#                checks patient details before saving to
+#                the system using Regular Expressions.
+# ============================================================
+
+import re
+
+
+def validate_user_form(name: str, email: str, phone: str,
+                       dob: str, pincode: str) -> dict:
+    """
+    Validates hospital patient registration form fields
+    using regular expression patterns.
+
+    Args:
+        name     (str): Full name of the patient.
+        email    (str): Email address of the patient.
+        phone    (str): 10-digit mobile number.
+        dob      (str): Date of birth in DD-MM-YYYY format.
+        pincode  (str): 6-digit Indian postal pincode.
+
+    Returns:
+        dict: Validation result for each field with status and message.
+    """
+
+    results = {}
+
+    # -------------------------------------------------------
+    # Pattern 1: Full Name
+    # Only alphabets and single spaces allowed, min 3 characters
+    # -------------------------------------------------------
+    name_pattern = r"^[A-Za-z]+(?: [A-Za-z]+)*$"
+    if re.fullmatch(name_pattern, name.strip()) and len(name.strip()) >= 3:
+        results["name"] = {"status": "✅ Valid", "message": "Name is valid."}
+    else:
+        results["name"] = {"status": "❌ Invalid", "message": "N`ame must contain only alphabets and spaces, min 3 characters."}
+
+    # -------------------------------------------------------
+    # Pattern 2: Email Address
+    # Standard email format: characters @ domain . extension
+    # -------------------------------------------------------
+    email_pattern = r"^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,6}$"
+    if re.fullmatch(email_pattern, email.strip()):
+        results["email"] = {"status": "✅ Valid", "message": "Email is valid."}
+    else:
+        results["email"] = {"status": "❌ Invalid", "message": "Enter a valid email like user@example.com."}
+
+    # -------------------------------------------------------
+    # Pattern 3: Phone Number
+    # 10-digit Indian mobile number starting with 6, 7, 8, or 9
+    # -------------------------------------------------------
+    phone_pattern = r"^[6-9]\d{9}$"
+    if re.fullmatch(phone_pattern, phone.strip()):
+        results["phone"] = {"status": "✅ Valid", "message": "Phone number is valid."}
+    else:
+        results["phone"] = {"status": "❌ Invalid", "message": "Phone must be 10 digits starting with 6, 7, 8, or 9."}
+
+    # -------------------------------------------------------
+    # Pattern 4: Date of Birth
+    # Format: DD-MM-YYYY (e.g., 15-08-1995)
+    # -------------------------------------------------------
+    dob_pattern = r"^(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-\d{4}$"
+    if re.fullmatch(dob_pattern, dob.strip()):
+        results["dob"] = {"status": "✅ Valid", "message": "Date of birth is valid."}
+    else:
+        results["dob"] = {"status": "❌ Invalid", "message": "Date must be in DD-MM-YYYY format like 15-08-1995."}
+
+    # -------------------------------------------------------
+    # Pattern 5: Pincode
+    # 6-digit Indian postal pincode, cannot start with 0
+    # -------------------------------------------------------
+    pincode_pattern = r"^[1-9]\d{5}$"
+    if re.fullmatch(pincode_pattern, pincode.strip()):
+        results["pincode"] = {"status": "✅ Valid", "message": "Pincode is valid."}
+    else:
+        results["pincode"] = {"status": "❌ Invalid", "message": "Pincode must be 6 digits and cannot start with 0."}
+
+    return results
+
+
+# -------------------------------------------------------
+# Main Program - Test with sample patient data
+# -------------------------------------------------------
+if __name__ == "__main__":
+
+    # Test Data - Patient Registration Details
+    test_patient = {
+        "name"    : "Ramesh Kumar",
+        "email"   : "ramesh.kumar@gmail.com",
+        "phone"   : "9876543210",
+        "dob"     : "15-08-1990",
+        "pincode" : "302001"
+    }
+
+    print("=" * 55)
+    print("       🏥  HOSPITAL PATIENT FORM VALIDATOR")
+    print("=" * 55)
+
+    validation_result = validate_user_form(
+        test_patient["name"],
+        test_patient["email"],
+        test_patient["phone"],
+        test_patient["dob"],
+        test_patient["pincode"]
+    )
+
+    for field, result in validation_result.items():
+        print(f"  {field.upper():<10} : {result['status']}  —  {result['message']}")
+
+    print("=" * 55)
+
+
+Role:
+You are a Senior Python Developer and Technical Educator with 20+ years of experience
+in explaining Regular Expressions to beginners, junior developers, and non-technical audiences.
+
+Task:
+I have a Python program named "form_validator.py".
+In this program there is a function called "validate_user_form".
+This function uses multiple Regular Expression (regex) patterns to validate user input fields.
+Your task is to read each regex pattern carefully and explain what each pattern matches
+in simple plain English so that even a beginner can understand it completely.
+Do not explain the full file, focus only on the regex patterns inside "validate_user_form".
+
+Rules to Follow:
+1. Use plain English only, avoid heavy technical jargon.
+2. Do not skip any regex pattern, cover every single pattern in the function.
+3. Explain each regex pattern in the same order as it appears in the code top to bottom.
+4. For each pattern explain character by character what it means.
+5. Give one matching example and one non-matching example for every pattern.
+6. Do not modify or rewrite the function, only explain the patterns as they are.
+7. Keep your language simple enough for a 1st year programming student.
+8. Do not assume anything that is not written in the function.
+
+Output Requirements:
+1. Purpose of This Function
+   - Write 2 to 3 lines explaining what this function is validating overall.
+
+2. Regex Pattern Breakdown
+   - For each pattern write the following:
+     a. Pattern Name (which field it is validating)
+     b. The actual pattern as written in the code
+     c. Plain English meaning character by character
+     d. One example that MATCHES this pattern
+     e. One example that DOES NOT MATCH this pattern
+
+3. Overall Validation Logic
+   - Explain how all patterns work together to validate the full form.
+   - Mention what happens when all validations pass.
+   - Mention what happens when any validation fails.
+
+4. Real World Analogy
+   - Give one real world analogy for how regex validation works.
+   - The analogy should be relatable to everyday life.
+
+5. Important Logic and Special Handling
+   - Mention any special decisions made in the regex patterns.
+   - Example: why ^ and $ are used, why + or * is used, why groups are used.
+
+Output Format:
+- Use clear section headings for each of the 5 points above.
+- Use bullet points inside each section.
+- Keep the total explanation under 400 words.
+- Do not write any code in the output, only plain English explanation.
