@@ -1,0 +1,124 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
+# ============================================================
+# Program Name : library_management_py2.py
+# Scenario     : An old library management system written
+#                in Python 2 that manages book borrowing,   
+#                calculates fine for late returns, and
+#                prints member summary report.
+# NOTE         : This is Python 2 style code — do not run
+#                directly in Python 3 without migration.
+# ============================================================
+
+
+def manage_library(member_name, books_borrowed, days_late, is_premium):
+
+    # Step 1: Print welcome message (Python 2 print statement)
+    print "===== Library Management System ====="
+    print "Processing member:", member_name
+
+    # Step 2: Calculate fine using integer division (Python 2 behavior)
+    fine_per_day = 5
+    total_fine = fine_per_day * days_late / 2
+
+    # Step 3: Apply premium discount using old division result
+    if is_premium:
+        discount = total_fine / 4
+        total_fine = total_fine - discount
+        print "Premium Discount Applied:", discount
+
+    # Step 4: Check borrowing limit using Python 2 integer comparison
+    max_books = 5
+    if books_borrowed > max_books:
+        print "Warning: Book limit exceeded by", books_borrowed - max_books
+
+    # Step 5: Display member type using Python 2 unicode string
+    member_type = u"Premium Member" if is_premium else u"Regular Member"
+    print "Member Type:", member_type
+
+    # Step 6: Build summary using old-style string formatting
+    summary = "Member: %s | Books: %d | Fine: %d | Type: %s" % (
+               member_name, books_borrowed, total_fine, member_type)
+    print summary
+
+    # Step 7: Return summary using has_key() (Python 2 dict method)
+    result = {}
+    result["member_name"]   = member_name
+    result["books_borrowed"] = books_borrowed
+    result["total_fine"]    = total_fine
+    result["member_type"]   = member_type
+
+    if result.has_key("total_fine"):
+        print "Fine calculation confirmed."
+
+    return result
+
+
+# -------------------------------------------------------
+# Main Program - Python 2 style execution
+# -------------------------------------------------------
+member_data = manage_library("Ramesh Kumar", 7, 10, True)
+
+
+Role:
+You are a Senior Python Developer and Migration Expert with 20+ years of experience
+in Python 2 to Python 3 migration, explaining legacy code to modern developers,
+and helping teams understand outdated codebases in simple plain English.
+
+Task:
+I have an old Python 2 program named "library_management_py2.py".
+In this program there is a function called "manage_library".
+This function was written in Python 2 syntax and style.
+Your task is to read this function carefully and explain its complete logic
+to a developer who only knows Python 3 and has never written Python 2 code.
+Do not explain the full file, focus only on the function "manage_library".
+
+Rules to Follow:
+1. Use plain English only, avoid heavy technical jargon.
+2. Do not skip any line of the function, cover every single line.
+3. Explain logic in the same order as the code flows top to bottom.
+4. For every Python 2 specific syntax found, explain what it means
+   and what its equivalent is in Python 3.
+5. If there is any Python 2 behavior that is different from Python 3,
+   clearly highlight that difference with a simple example.
+6. Do not modify or rewrite the function, only explain it as it is.
+7. Keep your language simple enough for a Python 3 developer
+   who has never seen Python 2 code before.
+8. Do not assume anything that is not written in the function.
+
+Output Requirements:
+1. Purpose of This Function
+   - Write 2 to 3 lines explaining what this function does overall in plain English.
+
+2. Python 2 vs Python 3 Key Differences Found
+   - List every Python 2 specific syntax found in this function.
+   - For each one write what it means in Python 2.
+   - For each one write what the Python 3 equivalent is.
+
+3. Step by Step Line by Line Explanation
+   - Go through every line of the function.
+   - Write what that line is doing in simple words.
+   - Wherever Python 2 syntax is used, flag it clearly and explain the difference.
+
+4. What a Python 3 Developer Must Watch Out For
+   - List all the things that would break or behave differently in Python 3.
+   - Explain why each one would cause a problem.
+
+5. Real World Analogy
+   - Give one real world analogy that explains the difference between
+     Python 2 and Python 3 behavior in this function.
+   - The analogy should be relatable to everyday life.
+
+6. Important Logic and Special Handling
+   - Mention any special decisions made in the code.
+   - Example: why print is used without parentheses, why integer division
+     behaves differently, why unicode handling is different.
+
+Output Format:
+- Use clear section headings for each of the 6 points above.
+- Use bullet points inside each section.
+- Keep the total explanation under 400 words.
+- Do not write any code in the output, only plain English explanation.
+print "Final Result:", member_data
+
