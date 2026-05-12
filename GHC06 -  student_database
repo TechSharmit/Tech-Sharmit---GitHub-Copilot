@@ -1,0 +1,217 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
+# ============================================================
+# Program Name : student_database.py
+# Scenario     : A school management system that stores
+#                student records in a SQLite database,
+#                performs CRUD operations and generates
+#                a report of top performing students.
+# ============================================================
+
+import sqlite3
+
+
+def manage_student_database():
+    """
+    Performs all database operations for the school
+    student management system including creating table,
+    inserting records, updating marks, deleting records,
+    and fetching student reports.
+    """
+
+    # ----------------------------------------------------------
+    # DB Interaction 1: Connect to SQLite Database
+    # Creates database file if it does not exist
+    # ----------------------------------------------------------
+    connection = sqlite3.connect("school.db")
+    cursor     = connection.cursor()
+
+    # ----------------------------------------------------------
+    # DB Interaction 2: CREATE TABLE
+    # Creates students table if it does not already exist
+    # ----------------------------------------------------------
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS students (
+            student_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+            name         TEXT    NOT NULL,
+            class        TEXT    NOT NULL,
+            marks        REAL    NOT NULL,
+            is_active    INTEGER DEFAULT 1
+        )
+    """)
+    connection.commit()
+
+    # ----------------------------------------------------------
+    # DB Interaction 3: INSERT Records
+    # Inserts multiple student records into the table
+    # ----------------------------------------------------------
+    students_data = [
+        ("Ramesh Kumar",  "10-A", 88.5),
+        ("Sunita Devi",   "10-B", 91.0),
+        ("Ajay Sharma",   "10-A", 74.0),
+        ("Priya Patel",   "10-B", 95.5),
+        ("Mohit Verma",   "10-A", 61.0)
+    ]
+
+    cursor.executemany("""
+        INSERT INTO students (name, class, marks)
+        VALUES (?, ?, ?)
+    """, students_data)
+    connection.commit()
+
+    # ----------------------------------------------------------
+    # DB Interaction 4: SELECT All Records
+    # Fetches all student records from the table
+    # ----------------------------------------------------------
+    cursor.execute("SELECT * FROM students")
+    all_students = cursor.fetchall()
+
+    print("=" * 60)
+    print("       📋  ALL STUDENT RECORDS")
+    print("=" * 60)
+    print(f"  {'ID':<5} {'Name':<18} {'Class':<8} {'Marks':<8} {'Active'}")
+    print("-" * 60)
+    for student in all_students:
+        print(f"  {student[0]:<5} {student[1]:<18} {student[2]:<8} "
+              f"{student[3]:<8} {student[4]}")
+
+    # ----------------------------------------------------------
+    # DB Interaction 5: UPDATE Record
+    # Updates marks for a specific student by name
+    # ----------------------------------------------------------
+    cursor.execute("""
+        UPDATE students
+        SET marks = ?
+        WHERE name = ?
+    """, (97.0, "Ajay Sharma"))
+    connection.commit()
+    print("\n  ✅ Marks updated for Ajay Sharma to 97.0")
+
+    # ----------------------------------------------------------
+    # DB Interaction 6: SELECT Top Performers
+    # Fetches students scoring above 85 marks ordered by marks
+    # ----------------------------------------------------------
+    cursor.execute("""
+        SELECT name, class, marks
+        FROM students
+        WHERE marks > ?
+        ORDER BY marks DESC
+    """, (85,))
+    top_students = cursor.fetchall()
+
+    print("\n" + "=" * 60)
+    print("       🏆  TOP PERFORMING STUDENTS (Marks > 85)")
+    print("=" * 60)
+    print(f"  {'Name':<18} {'Class':<8} {'Marks'}")
+    print("-" * 60)
+    for student in top_students:
+        print(f"  {student[0]:<18} {student[1]:<8} {student[2]}")
+
+    # ----------------------------------------------------------
+    # DB Interaction 7: DELETE Record
+    # Marks a student as inactive (soft delete)
+    # ----------------------------------------------------------
+    cursor.execute("""
+        UPDATE students
+        SET is_active = ?
+        WHERE name = ?
+    """, (0, "Mohit Verma"))
+    connection.commit()
+    print("\n  ✅ Mohit Verma marked as inactive.")
+
+    # ----------------------------------------------------------
+    # DB Interaction 8: SELECT Active Students Only
+    # Fetches only students where is_active = 1
+    # ----------------------------------------------------------
+    cursor.execute("""
+        SELECT name, class, marks
+        FROM students
+        WHERE is_active = ?
+    """, (1,))
+    active_students = cursor.fetchall()
+
+    print("\n" + "=" * 60)
+    print("       ✅  ACTIVE STUDENTS ONLY")
+    print("=" * 60)
+    for student in active_students:
+        print(f"  {student[0]:<18} {student[1]:<8} {student[2]}")
+
+    # ----------------------------------------------------------
+    # DB Interaction 9: DROP TABLE
+    # Cleans up the table after demo is complete
+    # ----------------------------------------------------------
+    cursor.execute("DROP TABLE IF EXISTS students")
+    connection.commit()
+
+    # ----------------------------------------------------------
+    # DB Interaction 10: CLOSE Connection
+    # Releases database connection and frees resources
+    # ----------------------------------------------------------
+    connection.close()
+    print("\n  ✅ Database connection closed successfully.")
+    print("=" * 60)
+
+
+# -------------------------------------------------------
+# Main Program
+# -------------------------------------------------------
+if __name__ == "__main__":
+    manage_student_database()
+Role:
+You are a Senior Python Developer and Database Expert with 20+ years of experience
+in identifying, reviewing, and explaining database interactions in Python applications
+to beginners, junior developers, and non-technical audiences.
+
+Task:
+I have a Python program named "student_database.py".
+In this program there is a function called "manage_student_database".
+This function performs multiple database operations using SQLite.
+Your task is to read this function carefully and identify every single
+database interaction present in this function and explain what each
+one does in simple plain English.
+Do not explain the full file, focus only on the function "manage_student_database".
+
+Rules to Follow:
+1. Use plain English only, avoid heavy technical jargon.
+2. Do not skip any database interaction, identify and cover every single one.
+3. Explain each database interaction in the same order as it appears in the code top to bottom.
+4. For each interaction clearly mention which SQL operation it is
+   (CREATE, INSERT, SELECT, UPDATE, DELETE, COMMIT, CLOSE).
+5. Explain what would happen to the database if that line was removed or skipped.
+6. Do not modify or rewrite the function, only explain it as it is.
+7. Keep your language simple enough for a 1st year programming student.
+8. Do not assume anything that is not written in the function.
+
+Output Requirements:
+1. Purpose of This Function
+   - Write 2 to 3 lines explaining what database work this function performs overall.
+
+2. Database Interactions Found
+   - List every database interaction found in this function.
+   - For each interaction write the following:
+     a. Interaction Number (1, 2, 3 ...)
+     b. Type of Operation (CREATE / INSERT / SELECT / UPDATE / DELETE / COMMIT / CLOSE)
+     c. Plain English explanation of what this interaction does.
+     d. What would break or be missing if this interaction was removed.
+
+3. Flow of Database Operations
+   - Explain the sequence of all database operations from start to finish.
+   - Explain how data flows from the Python code into the database and back.
+
+4. Real World Analogy
+   - Give one real world analogy that explains how these database
+     interactions work together.
+   - The analogy should be relatable to everyday life.
+
+5. Important Logic and Special Handling
+   - Mention any special decisions made in the database interactions.
+   - Example: why commit() is used, why close() is needed,
+     why parameterized queries are used instead of string formatting,
+     why fetchall() is used instead of fetchone().
+
+Output Format:
+- Use clear section headings for each of the 5 points above.
+- Use bullet points inside each section.
+- Keep the total explanation under 400 words.
+- Do not write any code in the output, only plain English explanation.
