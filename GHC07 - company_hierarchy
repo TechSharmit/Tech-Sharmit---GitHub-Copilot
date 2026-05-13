@@ -1,0 +1,177 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
+# ============================================================
+# Program Name : company_hierarchy.py
+# Scenario     : A company HR system that calculates total
+#                bonus for each employee including all their
+#                team members below them in the hierarchy.
+#                Uses recursion to traverse the org tree.
+# ============================================================
+
+
+# Company hierarchy represented as a nested dictionary
+# Each employee has a name, individual bonus, and list of subordinates
+
+company_tree = {
+    "name"         : "Ramesh (CEO)",
+    "bonus"        : 50000,
+    "subordinates" : [
+        {
+            "name"         : "Sunita (VP-Sales)",
+            "bonus"        : 30000,
+            "subordinates" : [
+                {
+                    "name"         : "Ajay (Sales Manager)",
+                    "bonus"        : 20000,
+                    "subordinates" : [
+                        {
+                            "name"         : "Priya (Sales Executive)",
+                            "bonus"        : 10000,
+                            "subordinates" : []
+                        },
+                        {
+                            "name"         : "Mohit (Sales Executive)",
+                            "bonus"        : 10000,
+                            "subordinates" : []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name"         : "Neha (VP-Tech)",
+            "bonus"        : 30000,
+            "subordinates" : [
+                {
+                    "name"         : "Vikram (Tech Lead)",
+                    "bonus"        : 20000,
+                    "subordinates" : [
+                        {
+                            "name"         : "Ritu (Developer)",
+                            "bonus"        : 10000,
+                            "subordinates" : []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+def calculate_team_bonus(employee: dict, level: int = 0) -> int:
+    """
+    Recursively calculates the total bonus for an employee
+    including all subordinates below them in the hierarchy.
+
+    Args:
+        employee (dict): Employee node with name, bonus, subordinates.
+        level    (int) : Current depth level in hierarchy (default 0).
+
+    Returns:
+        int: Total bonus amount for this employee and entire team below.
+    """
+
+    # Step 1: Get the individual bonus of current employee
+    total_bonus = employee["bonus"]
+
+    # Step 2: Print current employee with indentation showing level
+    indent = "    " * level
+    print(f"{indent}📌 {employee['name']} — Individual Bonus: ₹ {employee['bonus']:,}")
+
+    # Step 3: BASE CASE — if no subordinates, return own bonus only
+    if not employee["subordinates"]:
+        print(f"{indent}   └── No team members. Bonus = ₹ {total_bonus:,}")
+        return total_bonus
+
+    # Step 4: RECURSIVE CASE — loop through each subordinate
+    #         and recursively calculate their total team bonus
+    for subordinate in employee["subordinates"]:
+        total_bonus += calculate_team_bonus(subordinate, level + 1)
+
+    # Step 5: Print total bonus for this employee including full team
+    print(f"{indent}   └── Total Team Bonus for {employee['name']} = ₹ {total_bonus:,}")
+
+    return total_bonus
+
+
+# -------------------------------------------------------
+# Main Program
+# -------------------------------------------------------
+if __name__ == "__main__":
+
+    print("=" * 60)
+    print("       🏢  COMPANY HIERARCHY — TEAM BONUS CALCULATOR")
+    print("=" * 60)
+
+    final_total = calculate_team_bonus(company_tree)
+
+    print("=" * 60)
+    print(f"  💰  TOTAL COMPANY BONUS PAYOUT : ₹ {final_total:,}")
+    print("=" * 60)
+
+Role:
+You are a Senior Python Developer and Computer Science Educator with 20+ years
+of experience in explaining recursion, algorithms, and complex programming
+concepts to beginners, junior developers, and non-technical audiences.
+
+Task:
+I have a Python program named "company_hierarchy.py".
+In this program there is a function called "calculate_team_bonus".
+This function uses recursion to traverse a company hierarchy tree
+and calculate total bonus for each employee and their team.
+Your task is to read this function carefully and explain exactly
+how the recursion works step by step in simple plain English.
+Do not explain the full file, focus only on the function "calculate_team_bonus".
+
+Rules to Follow:
+1. Use plain English only, avoid heavy technical jargon.
+2. Do not skip any line of the function, cover every single line.
+3. Explain the recursion step by step showing exactly how each
+   recursive call is made and in what order.
+4. Show the complete call stack from first call to last call
+   using the actual data from the program (names and values).
+5. Clearly explain what the base case is and why it is important.
+6. Clearly explain what the recursive case is and what it does differently.
+7. Explain what would happen if the base case was removed.
+8. Do not modify or rewrite the function, only explain it as it is.
+9. Keep your language simple enough for a 1st year programming student.
+10. Do not assume anything that is not written in the function.
+
+Output Requirements:
+1. Purpose of This Function
+   - Write 2 to 3 lines explaining what this function does overall in plain English.
+
+2. Base Case Explanation
+   - Clearly identify the base case in this function.
+   - Explain in plain English why this base case is needed.
+   - Explain what would go wrong if this base case was missing.
+
+3. Recursive Case Explanation
+   - Clearly identify the recursive case in this function.
+   - Explain what happens at each recursive call in simple words.
+   - Explain how the function gets closer to the base case with each call.
+
+4. Step by Step Call Stack Trace
+   - Show the complete recursion call stack using actual names and
+     values from the program data.
+   - Show each function call level clearly from Level 1 to final level.
+   - Show how the results come back up from the deepest call to the top.
+
+5. Real World Analogy
+   - Give one real world analogy that explains exactly how this
+     recursion works.
+   - The analogy should be relatable to everyday life.
+
+6. Important Logic and Special Handling
+   - Mention any special decisions made in the recursive function.
+   - Example: why the base case returns what it returns, why the
+     recursive result is added to current value, how the tree
+     structure is being traversed.
+
+Output Format:
+- Use clear section headings for each of the 6 points above.
+- Use bullet points inside each section.
+- Keep the total explanation under 450 words.
+- Do not write any code in the output, only plain English explanation.
