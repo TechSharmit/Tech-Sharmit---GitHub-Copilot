@@ -1,0 +1,230 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
+# ============================================================
+# Program Name : bank_transaction.py
+# Scenario     : A banking system that monitors every
+#                withdrawal transaction for security,
+#                performance tracking, and audit logging
+#                using a Python decorator.
+# ============================================================
+
+import time
+import functools
+from datetime import datetime
+
+
+# ----------------------------------------------------------
+# THE DECORATOR — transaction_monitor
+# Wraps any bank transaction function to add:
+#   - Security check before transaction
+#   - Execution time measurement
+#   - Audit log entry before and after
+#   - Error handling and alerting
+# ----------------------------------------------------------
+def transaction_monitor(func):
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+
+        # ------------------------------------------------
+        # BEFORE THE FUNCTION RUNS
+        # ------------------------------------------------
+
+        # Step 1: Capture transaction start time
+        start_time = time.time()
+
+        # Step 2: Get current timestamp for audit log
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Step 3: Extract account and amount from arguments
+        account_number = args[0] if args else "Unknown"
+        amount         = args[1] if len(args) > 1 else 0
+
+        # Step 4: Print audit log entry — transaction started
+        print("=" * 55)
+        print(f"  🔐 TRANSACTION MONITOR — AUDIT LOG")
+        print("=" * 55)
+        print(f"  ▶ Timestamp       : {timestamp}")
+        print(f"  ▶ Function Called : {func.__name__}")
+        print(f"  ▶ Account Number  : {account_number}")
+        print(f"  ▶ Amount          : ₹ {amount:,}")
+        print(f"  ▶ Status          : INITIATED")
+        print("-" * 55)
+
+        # Step 5: Security check — block transactions above limit
+        if amount > 100000:
+            print(f"  🚨 SECURITY ALERT : Amount exceeds ₹ 1,00,000 limit!")
+            print(f"  ❌ Transaction BLOCKED by monitor.")
+            print("=" * 55)
+            return None
+
+        # ------------------------------------------------
+        # CALL THE ORIGINAL FUNCTION
+        # ------------------------------------------------
+        try:
+            result = func(*args, **kwargs)
+            status = "SUCCESS"
+
+        except Exception as e:
+            result = None
+            status = f"FAILED — {str(e)}"
+
+        # ------------------------------------------------
+        # AFTER THE FUNCTION RUNS
+        # ------------------------------------------------
+
+        # Step 6: Calculate total execution time
+        end_time       = time.time()
+        execution_time = round((end_time - start_time) * 1000, 2)
+
+        # Step 7: Print audit log entry — transaction completed
+        print(f"  ✅ Status          : {status}")
+        print(f"  ⏱  Execution Time  : {execution_time} ms")
+        print(f"  🔒 Monitor         : Transaction audit complete.")
+        print("=" * 55)
+
+        # Step 8: Return the original function result
+        return result
+
+    return wrapper
+
+
+# ----------------------------------------------------------
+# THE DECORATED FUNCTION — process_withdrawal
+# Actual bank withdrawal logic wrapped by transaction_monitor
+# ----------------------------------------------------------
+@transaction_monitor
+def process_withdrawal(account_number: str,
+                       amount: float,
+                       balance: float) -> dict:
+    """
+    Processes a bank withdrawal request after
+    validating sufficient balance.
+
+    Args:
+        account_number (str)  : Customer bank account number.
+        amount         (float): Amount to withdraw.
+        balance        (float): Current account balance.
+
+    Returns:
+        dict: Transaction result with updated balance and status.
+    """
+
+    # Step 1: Validate sufficient balance
+    if amount > balance:
+        raise ValueError(f"Insufficient balance. "
+                         f"Available: ₹ {balance:,}, "
+                         f"Requested: ₹ {amount:,}")
+
+    # Step 2: Deduct withdrawal amount from balance
+    updated_balance = balance - amount
+
+    # Step 3: Print transaction details
+    print(f"  💳 Processing withdrawal for Account: {account_number}")
+    print(f"  💰 Amount Withdrawn  : ₹ {amount:,}")
+    print(f"  🏦 Closing Balance   : ₹ {updated_balance:,}")
+
+    # Step 4: Return transaction result
+    return {
+        "account_number"  : account_number,
+        "amount_withdrawn": amount,
+        "closing_balance" : updated_balance,
+        "status"          : "Withdrawal Successful"
+    }
+
+
+# -------------------------------------------------------
+# Main Program — Test with 3 scenarios
+# -------------------------------------------------------
+if __name__ == "__main__":
+
+    # Test Case 1: Normal valid withdrawal
+    print("\n📌 TEST CASE 1 — Valid Withdrawal")
+    result1 = process_withdrawal("ACC-1001", 25000, 75000)
+
+    # Test Case 2: Withdrawal exceeding security limit
+    print("\n📌 TEST CASE 2 — Exceeds Security Limit")
+    result2 = process_withdrawal("ACC-1002", 150000, 200000)
+
+    # Test Case 3: Insufficient balance
+    print("\n📌 TEST CASE 3 — Insufficient Balance")
+    result3 = process_withdrawal("ACC-1003", 50000, 30000)
+
+Role:
+You are a Senior Python Developer and Technical Educator with 20+ years of
+experience in explaining advanced Python concepts like decorators, closures,
+higher order functions, and wrappers to beginners, junior developers,
+and non-technical audiences.
+
+Task:
+I have a Python program named "bank_transaction.py".
+In this program there is a decorator called "transaction_monitor"
+and a function called "process_withdrawal" which uses this decorator.
+Your task is to read the decorator and the decorated function carefully
+and explain exactly what happens BEFORE the function runs and AFTER
+the function runs due to the decorator in simple plain English.
+Do not explain the full file, focus only on the decorator
+"transaction_monitor" and the function "process_withdrawal".
+
+Rules to Follow:
+1. Use plain English only, avoid heavy technical jargon.
+2. Do not skip any line of the decorator or the decorated function,
+   cover every single line.
+3. Explain the complete execution flow in exact order:
+   what runs first, what runs second, what runs after the
+   original function finishes.
+4. Clearly separate what the DECORATOR does from what the
+   ORIGINAL FUNCTION does.
+5. Clearly explain what "wrapping" means in this context
+   using simple words.
+6. Explain what would happen if the decorator was removed
+   from the function.
+7. Do not modify or rewrite the code, only explain it as it is.
+8. Keep your language simple enough for a 1st year programming student.
+9. Do not assume anything that is not written in the code.
+
+Output Requirements:
+1. Purpose of This Decorator
+   - Write 2 to 3 lines explaining what this decorator does overall
+     in plain English.
+
+2. What Happens BEFORE the Function Runs
+   - List every action the decorator performs before calling
+     the original function.
+   - Explain each action in simple plain English.
+   - Mention what data is captured or checked at this stage.
+
+3. What the Original Function Does
+   - Explain what the original "process_withdrawal" function does
+     on its own without the decorator.
+   - List each step the function performs in plain English.
+
+4. What Happens AFTER the Function Runs
+   - List every action the decorator performs after the original
+     function finishes.
+   - Explain each action in simple plain English.
+   - Mention what data is logged, saved, or reported at this stage.
+
+5. Complete Execution Flow (Step by Step)
+   - Show the complete execution order from the moment the function
+     is called to the moment it returns.
+   - Number each step clearly from Step 1 to final Step.
+   - Use actual values from the program to make it concrete.
+
+6. Real World Analogy
+   - Give one real world analogy that explains exactly how this
+     decorator wraps the function.
+   - The analogy should be relatable to everyday life.
+
+7. Important Logic and Special Handling
+   - Mention any special decisions made in the decorator.
+   - Example: why functools.wraps is used, why try-except is inside
+     the wrapper, why time is captured before and after, why the
+     decorator returns the wrapper function and not the result.
+
+Output Format:
+- Use clear section headings for each of the 7 points above.
+- Use bullet points inside each section.
+- Keep the total explanation under 500 words.
+- Do not write any code in the output, only plain English explanation.
