@@ -1,0 +1,211 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
+# ============================================================
+# Program Name : employee_ranking.py
+# Scenario     : A corporate HR system that ranks employees
+#                based on performance score, salary, experience
+#                and department using lambda inside sorted()
+#                to produce various leaderboard reports.
+# ============================================================
+
+
+def rank_employees() -> None:
+    """
+    Sorts and ranks employee records using multiple
+    lambda functions inside sorted() calls to generate
+    different HR performance reports.
+    """
+
+    # ----------------------------------------------------------
+    # Raw employee data — list of dictionaries
+    # ----------------------------------------------------------
+    employees = [
+        {"name": "Ramesh Kumar",  "dept": "Sales",     "salary": 55000,
+         "score": 88, "experience": 5},
+        {"name": "Sunita Devi",   "dept": "Tech",      "salary": 72000,
+         "score": 92, "experience": 8},
+        {"name": "Ajay Sharma",   "dept": "Sales",     "salary": 48000,
+         "score": 76, "experience": 3},
+        {"name": "Priya Patel",   "dept": "HR",        "salary": 51000,
+         "score": 88, "experience": 6},
+        {"name": "Mohit Verma",   "dept": "Tech",      "salary": 85000,
+         "score": 95, "experience": 10},
+        {"name": "Neha Gupta",    "dept": "HR",        "salary": 47000,
+         "score": 70, "experience": 2},
+        {"name": "Vikram Singh",  "dept": "Tech",      "salary": 91000,
+         "score": 95, "experience": 12},
+        {"name": "Ritu Agarwal",  "dept": "Sales",     "salary": 62000,
+         "score": 83, "experience": 7},
+    ]
+
+    # ----------------------------------------------------------
+    # Sort 1: Sort by Performance Score — Highest First
+    # Lambda picks score field, reverse=True for descending
+    # ----------------------------------------------------------
+    by_score = sorted(employees,
+                      key    = lambda emp: emp["score"],
+                      reverse= True)
+
+    print("=" * 65)
+    print("  🏆  SORT 1 — BY PERFORMANCE SCORE (Highest First)")
+    print("=" * 65)
+    print(f"  {'Rank':<6} {'Name':<18} {'Dept':<10} {'Score'}")
+    print("-" * 65)
+    for rank, emp in enumerate(by_score, start=1):
+        print(f"  {rank:<6} {emp['name']:<18} {emp['dept']:<10} {emp['score']}")
+
+    # ----------------------------------------------------------
+    # Sort 2: Sort by Salary — Lowest First (ascending default)
+    # Lambda picks salary field, no reverse so ascending order
+    # ----------------------------------------------------------
+    by_salary = sorted(employees,
+                       key = lambda emp: emp["salary"])
+
+    print("\n" + "=" * 65)
+    print("  💰  SORT 2 — BY SALARY (Lowest to Highest)")
+    print("=" * 65)
+    print(f"  {'Rank':<6} {'Name':<18} {'Dept':<10} {'Salary (₹)'}")
+    print("-" * 65)
+    for rank, emp in enumerate(by_salary, start=1):
+        print(f"  {rank:<6} {emp['name']:<18} {emp['dept']:<10} "
+              f"₹ {emp['salary']:,}")
+
+    # ----------------------------------------------------------
+    # Sort 3: Sort by Name Alphabetically — A to Z
+    # Lambda picks name field and converts to lowercase
+    # to ensure case-insensitive alphabetical sorting
+    # ----------------------------------------------------------
+    by_name = sorted(employees,
+                     key = lambda emp: emp["name"].lower())
+
+    print("\n" + "=" * 65)
+    print("  🔤  SORT 3 — BY NAME (A to Z Alphabetical)")
+    print("=" * 65)
+    print(f"  {'Rank':<6} {'Name':<18} {'Dept'}")
+    print("-" * 65)
+    for rank, emp in enumerate(by_name, start=1):
+        print(f"  {rank:<6} {emp['name']:<18} {emp['dept']}")
+
+    # ----------------------------------------------------------
+    # Sort 4: Multi-Key Sort — By Department A to Z,
+    #         then by Score Highest First within same department
+    # Lambda returns a tuple: (dept ascending, score descending)
+    # Minus sign on score flips it to descending in the tuple
+    # ----------------------------------------------------------
+    by_dept_score = sorted(employees,
+                           key = lambda emp: (emp["dept"],
+                                              -emp["score"]))
+
+    print("\n" + "=" * 65)
+    print("  🏢  SORT 4 — BY DEPARTMENT then SCORE (Multi-Key)")
+    print("=" * 65)
+    print(f"  {'Rank':<6} {'Name':<18} {'Dept':<10} {'Score'}")
+    print("-" * 65)
+    for rank, emp in enumerate(by_dept_score, start=1):
+        print(f"  {rank:<6} {emp['name']:<18} {emp['dept']:<10} {emp['score']}")
+
+    # ----------------------------------------------------------
+    # Sort 5: Multi-Key Sort — By Experience Descending,
+    #         then Salary Descending for same experience level
+    # Both keys negated to achieve descending on both fields
+    # ----------------------------------------------------------
+    by_exp_salary = sorted(employees,
+                           key = lambda emp: (-emp["experience"],
+                                              -emp["salary"]))
+
+    print("\n" + "=" * 65)
+    print("  📅  SORT 5 — BY EXPERIENCE then SALARY (Both Descending)")
+    print("=" * 65)
+    print(f"  {'Rank':<6} {'Name':<18} {'Exp (Yrs)':<12} {'Salary (₹)'}")
+    print("-" * 65)
+    for rank, emp in enumerate(by_exp_salary, start=1):
+        print(f"  {rank:<6} {emp['name']:<18} {emp['experience']:<12} "
+              f"₹ {emp['salary']:,}")
+
+    print("=" * 65)
+
+
+# -------------------------------------------------------
+# Main Program
+# -------------------------------------------------------
+if __name__ == "__main__":
+    rank_employees()
+
+
+
+Role:
+You are a Senior Python Developer and Technical Educator with 20+ years of
+experience in explaining Python built-in functions, lambda expressions,
+sorting algorithms, and key-based sorting logic to beginners,
+junior developers, and non-technical audiences.
+
+Task:
+I have a Python program named "employee_ranking.py".
+In this program there is a function called "rank_employees".
+This function uses multiple sorted() calls with lambda functions
+as the key argument to sort employee records in different ways.
+Your task is to read every sorted() call with its lambda function
+carefully and explain exactly how each sorting logic works
+in simple plain English.
+Do not explain the full file, focus only on the sorted() calls
+with lambda functions inside the function "rank_employees".
+
+Rules to Follow:
+1. Use plain English only, avoid heavy technical jargon.
+2. Do not skip any sorted() call, cover every single one
+   in the same order as it appears in the code top to bottom.
+3. For each sorted() call explain the lambda function
+   character by character and word by word.
+4. Show exactly which column or field the lambda is picking
+   and why that determines the sort order.
+5. Show the data BEFORE sorting and AFTER sorting using
+   actual values from the program for each sorted() call.
+6. Clearly explain what ascending and descending means
+   in context of each sort.
+7. Do not modify or rewrite the function, only explain it as it is.
+8. Keep your language simple enough for a 1st year programming student.
+9. Do not assume anything that is not written in the function.
+
+Output Requirements:
+1. Purpose of This Function
+   - Write 2 to 3 lines explaining what this function does
+     overall in plain English.
+
+2. What is a Lambda in sorted() — Quick Explanation
+   - Explain in 3 to 4 lines what a lambda function is
+     in the context of sorted() in simple plain English.
+   - Explain what the key argument does in sorted().
+
+3. Sorting Logic Breakdown — For Every sorted() Call
+   - For each sorted() call write the following:
+     a. Sort Number (Sort 1, Sort 2, Sort 3 ...)
+     b. The exact lambda used
+     c. Plain English meaning of this lambda word by word
+     d. Which field or column is being used as sort key
+     e. Ascending or Descending and why
+     f. Data BEFORE this sort (use actual names and values)
+     g. Data AFTER this sort (use actual names and values)
+
+4. Multi-Key Sorting Explanation
+   - Identify any sorted() call that sorts by more than one key.
+   - Explain how Python decides which key takes priority.
+   - Explain what happens when two records have the same value
+     on the first key.
+
+5. Real World Analogy
+   - Give one real world analogy that explains how lambda
+     in sorted() works.
+   - The analogy should be relatable to everyday life.
+
+6. Important Logic and Special Handling
+   - Mention any special decisions made in the sorting logic.
+   - Example: why reverse=True is used, why tuple is returned
+     in multi-key sort, why minus sign is used for descending
+     in a tuple key, why str.lower is used for name sorting.
+
+Output Format:
+- Use clear section headings for each of the 6 points above.
+- Use bullet points inside each section.
+- Keep the total explanation under 500 words.
+- Do not write any code in the output, only plain English explanation.
